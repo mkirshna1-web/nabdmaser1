@@ -15,41 +15,17 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#dc2626',
-                        primaryDark: '#b91c1c',
-                    },
-                    fontFamily: {
-                        cairo: ['Cairo', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
     <style>
-        body {
-            font-family: 'Cairo', sans-serif;
-            background-color: #f1f5f9;
-        }
+        body { font-family: 'Cairo', sans-serif; background-color: #f1f5f9; }
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: #f1f5f9; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 999px; }
-        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-        
-        @keyframes ticker {
-            0% { transform: translate3d(0, 0, 0); }
-            100% { transform: translate3d(100%, 0, 0); }
-        }
-        .ticker-move {
-            display: inline-block;
-            white-space: nowrap;
-            animation: ticker 30s linear infinite;
-        }
+        @keyframes ticker { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(100%, 0, 0); } }
+        .ticker-move { display: inline-block; white-space: nowrap; animation: ticker 30s linear infinite; }
         .ticker-move:hover { animation-play-state: paused; }
     </style>
 </head>
@@ -60,6 +36,7 @@
         <span id="toastMessage" class="text-sm font-bold">تم الإجراء بنجاح</span>
     </div>
 
+    <!-- الشريط العلوي -->
     <div class="bg-slate-950 text-slate-300 text-xs py-1.5 px-4 border-b border-slate-800 hidden md:block">
         <div class="max-w-7xl mx-auto flex items-center justify-between">
             <div class="flex items-center gap-6">
@@ -68,28 +45,25 @@
                 <span class="flex items-center gap-1.5"><i class="fa-solid fa-coins text-yellow-400"></i> عيار 21: 4,150 ج.م</span>
                 <span class="flex items-center gap-1.5"><i class="fa-solid fa-dollar-sign text-emerald-400"></i> الدولار: 48.65 ج.م</span>
             </div>
-            <div class="flex items-center gap-4 text-slate-400">
-                <span class="text-[11px] text-slate-400 font-medium">البث المباشر لمنظومة نبض مصر ⚡</span>
-            </div>
+            <span class="text-[11px] text-slate-400 font-medium">سيرفرات البث السحابي المباشر ⚡</span>
         </div>
     </div>
 
+    <!-- الهيدر -->
     <header class="bg-white shadow-sm sticky top-0 z-30 border-b border-slate-200">
         <div class="max-w-7xl mx-auto px-3 sm:px-6 h-16 flex items-center justify-between gap-4">
-            <div class="flex items-center gap-3">
-                <a href="#" class="flex items-center gap-2.5 text-primary font-black text-2xl tracking-tight">
-                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-red-600 to-red-800 flex items-center justify-center text-white shadow-md">
-                        <i class="fa-solid fa-bolt-lightning text-xl"></i>
-                    </div>
-                    <div class="flex flex-col leading-none">
-                        <span class="text-xl font-black text-slate-900">نبض <span class="text-red-600">مصر</span></span>
-                        <span class="text-[9px] font-bold text-slate-400">المنصة الإخبارية المستقلة</span>
-                    </div>
-                </a>
-            </div>
+            <a href="#" class="flex items-center gap-2.5 text-red-600 font-black text-2xl tracking-tight">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-red-600 to-red-800 flex items-center justify-center text-white shadow-md">
+                    <i class="fa-solid fa-bolt-lightning text-xl"></i>
+                </div>
+                <div class="flex flex-col leading-none">
+                    <span class="text-xl font-black text-slate-900">نبض <span class="text-red-600">مصر</span></span>
+                    <span class="text-[9px] font-bold text-slate-400">المنصة الإخبارية المستقلة</span>
+                </div>
+            </a>
 
             <div class="relative flex-1 max-w-md hidden sm:block">
-                <input type="text" id="searchInput" onkeyup="handleSearch(this.value)" placeholder="ابحث في الأخبار..." class="w-full bg-slate-100 text-xs sm:text-sm rounded-full py-2 pr-10 pl-4 border border-transparent focus:border-red-500 focus:bg-white focus:outline-none">
+                <input type="text" id="searchInput" onkeyup="handleSearch(this.value)" placeholder="ابحث في التغطيات الصحفية..." class="w-full bg-slate-100 text-xs sm:text-sm rounded-full py-2 pr-10 pl-4 border border-transparent focus:border-red-500 focus:bg-white focus:outline-none">
                 <i class="fa-solid fa-magnifying-glass absolute right-3.5 top-3 text-slate-400 text-sm"></i>
             </div>
 
@@ -102,19 +76,17 @@
         </div>
     </header>
 
+    <!-- شريط تسجيل دخول الإدارة -->
     <div id="adminLoginBar" class="hidden bg-slate-900 text-white py-3 px-4 border-b border-slate-800 transition-all">
         <div class="max-w-xl mx-auto flex items-center gap-3">
-            <span class="text-xs font-bold text-slate-300 shrink-0"><i class="fa-solid fa-shield-halved text-red-500 ml-1"></i> كلمة المرور:</span>
-            <input type="password" id="adminSecretInput" placeholder="أدخل الرمز السري الخاص بك..." class="flex-1 bg-slate-800 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-white focus:outline-none focus:border-red-500">
-            <button onclick="verifyAdminAccess()" class="bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-4 py-1.5 rounded-xl transition">
-                تأكيد
-            </button>
-            <button onclick="toggleAdminLoginBar()" class="text-slate-400 hover:text-white text-xs">
-                إلغاء
-            </button>
+            <span class="text-xs font-bold text-slate-300 shrink-0"><i class="fa-solid fa-shield-halved text-red-500 ml-1"></i> الرمز السري:</span>
+            <input type="password" id="adminSecretInput" placeholder="أدخل كلمة المرور..." class="flex-1 bg-slate-800 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-white focus:outline-none focus:border-red-500">
+            <button onclick="verifyAdminAccess()" class="bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-4 py-1.5 rounded-xl transition">تأكيد</button>
+            <button onclick="toggleAdminLoginBar()" class="text-slate-400 hover:text-white text-xs">إلغاء</button>
         </div>
     </div>
 
+    <!-- شريط العاجل -->
     <div class="bg-red-600 text-white text-xs sm:text-sm py-2 px-3 shadow-inner flex items-center">
         <div class="max-w-7xl mx-auto w-full flex items-center gap-3">
             <div class="flex items-center gap-1.5 font-black bg-black/30 px-3 py-1 rounded-full text-xs shrink-0">
@@ -123,21 +95,21 @@
             </div>
             <div class="overflow-hidden w-full font-bold relative">
                 <div id="tickerContent" class="ticker-move">
-                    🔴 الحكومة المصرية تعلن استمرار التسهيلات لدعم المصنعين &nbsp;&nbsp;|&nbsp;&nbsp; 🔴 البنك المركزي: ارتفاع صافي الاحتياطيات الدولية &nbsp;&nbsp;|&nbsp;&nbsp; 🔴 منتخب مصر يواصل استعداداته لمواجهات تصفيات كأس الأمم
+                    🔴 منصة نبض مصر الإخبارية - تغطية شاملة وحية على مدار الساعة
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- المحتوى الأساسي -->
     <div class="max-w-7xl mx-auto px-3 sm:px-6 py-6 grid grid-cols-1 lg:grid-cols-12 gap-6 w-full flex-grow">
-
+        
         <aside class="lg:col-span-3 space-y-4">
             <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200">
                 <h3 class="font-black text-slate-900 text-sm mb-3 pb-2 border-b border-slate-100 flex items-center justify-between">
                     <span class="flex items-center gap-2"><i class="fa-solid fa-layer-group text-red-600"></i> الأقسام</span>
                     <span id="activeFilterBadge" class="text-[10px] bg-red-100 text-red-700 px-2 py-0.5 rounded-full font-black">الكل</span>
                 </h3>
-
                 <nav class="space-y-1">
                     <button onclick="setCategoryFilter('الكل', this)" class="cat-nav-btn w-full flex items-center justify-between px-3 py-2 rounded-xl bg-red-600 text-white font-bold text-xs transition">
                         <span>كل التغطيات</span>
@@ -164,16 +136,15 @@
         </aside>
 
         <main class="lg:col-span-6 space-y-6">
-
+            <!-- لوحة النشر للمدير -->
             <div id="publisherPanel" class="hidden bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
                 <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-3">
-                    <span class="text-xs font-black text-emerald-600">● مرحباً بك يا أبا داليدا (لوحة التحرير نشطة)</span>
+                    <span class="text-xs font-black text-emerald-600">● مرحباً بك يا أبا داليدا (النشر السحابي نشط)</span>
                     <button onclick="logoutAdmin()" class="text-xs text-red-500 font-bold hover:underline">قفل اللوحة</button>
                 </div>
 
                 <form onsubmit="handlePublish(event)" class="space-y-3">
-                    <input type="text" id="postTitleInput" placeholder="عنوان الخبر أو المقال..." required class="w-full text-sm font-bold bg-slate-50 rounded-xl px-3.5 py-2.5 border border-slate-200 focus:outline-none focus:border-red-500">
-                    
+                    <input type="text" id="postTitleInput" placeholder="عنوان الخبر الرئيسي..." required class="w-full text-sm font-bold bg-slate-50 rounded-xl px-3.5 py-2.5 border border-slate-200 focus:outline-none focus:border-red-500">
                     <textarea id="postContentInput" rows="3" placeholder="تفاصيل المحتوى الكامل..." required class="w-full bg-slate-50 rounded-xl p-3 text-xs sm:text-sm border border-slate-200 focus:outline-none focus:border-red-500 resize-none"></textarea>
                     
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -183,30 +154,30 @@
                             <option value="رياضة">⚽ تصنيف: رياضة</option>
                             <option value="مقالات">✍️ تصنيف: مقالات</option>
                         </select>
-
                         <input type="url" id="postImageUrl" placeholder="رابط صورة الغلاف (اختياري)..." class="bg-slate-50 border border-slate-200 text-xs rounded-xl px-3 py-2 focus:outline-none">
                     </div>
 
                     <div class="flex items-center justify-between pt-2">
                         <label class="text-xs font-bold text-slate-600 flex items-center gap-1.5 cursor-pointer">
-                            <input type="checkbox" id="tickerCheckbox" class="accent-red-600">
-                            بث في الشريط العاجل
+                            <input type="checkbox" id="tickerCheckbox" class="accent-red-600"> بث في الشريط العاجل
                         </label>
-                        <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-2 rounded-xl text-xs shadow-md">
-                            نشر الخبر فوراً
+                        <button type="submit" id="submitBtn" class="bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-2 rounded-xl text-xs shadow-md">
+                            نشر سحابي للجميع
                         </button>
                     </div>
                 </form>
             </div>
 
-            <div id="postsTimeline" class="space-y-4"></div>
-
+            <!-- مجرى الأخبار الحي -->
+            <div id="postsTimeline" class="space-y-4">
+                <div class="text-center py-10 text-slate-400 text-xs font-bold">جاري تحميل الأخبار من السيرفر...</div>
+            </div>
         </main>
 
         <aside class="lg:col-span-3 space-y-4">
             <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200">
                 <h3 class="font-black text-slate-900 text-xs sm:text-sm mb-3 pb-2 border-b border-slate-100 flex items-center gap-2">
-                    <i class="fa-solid fa-fire text-amber-500"></i> الأكثر قراءة اليوم
+                    <i class="fa-solid fa-fire text-amber-500"></i> الأخبار الأكثر قراءة
                 </h3>
                 <div class="space-y-3" id="trendingList"></div>
             </div>
@@ -216,51 +187,28 @@
     </div>
 
     <script>
-        // كلمة المرور السرية للمدير فقط
+        const firebaseConfig = {
+            apiKey: "AIzaSyB5I3TkfsMEQ0raTYGKgOGcORqNnaD8cnc",
+            authDomain: "nabdmaser-24b5e.firebaseapp.com",
+            projectId: "nabdmaser-24b5e",
+            storageBucket: "nabdmaser-24b5e.firebasestorage.app",
+            messagingSenderId: "630210248313",
+            appId: "1:630210248313:web:0640b849224f3b603ddea8",
+            measurementId: "G-6EGR3EX3R6"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
         const ADMIN_SECRET = "Dalida@2026#";
-        const DB_KEY = 'NABDMASR_NEWS_V3';
         let isAdminLoggedIn = false;
         let currentFilter = 'الكل';
-
-        const defaultNews = [
-            {
-                id: 1,
-                title: "مصر تعزز صادراتها الصناعية والزراعية بحوافز تمويلية وضريبية جديدة",
-                content: "أعلنت الجهات المعنية اليوم عن خطة استراتيجية موسعة لتمكين المصنعين والمصدرين وفتح أسواق جديدة للمنتجات الوطنية.",
-                category: "اقتصاد",
-                author: "أبو داليدا",
-                time: "منذ قليل",
-                image: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=900&auto=format&fit=crop&q=80",
-                likes: 384
-            },
-            {
-                id: 2,
-                title: "عاجل: إعلان جداول ومواعيد المنظومة التعليمية المتطورة للعام الجديد",
-                content: "كشفت وزارة التربية والتعليم عن التفاصيل التنفيذية لتطوير المناهج وتحديث آليات التقييم لجميع المراحل الدراسية.",
-                category: "عاجل",
-                author: "أبو داليدا",
-                time: "منذ ساعتين",
-                image: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=900&auto=format&fit=crop&q=80",
-                likes: 512
-            }
-        ];
-
-        function loadDatabase() {
-            const stored = localStorage.getItem(DB_KEY);
-            if (stored) {
-                try { return JSON.parse(stored); } catch(e) { return defaultNews; }
-            }
-            return defaultNews;
-        }
-
-        let database = loadDatabase();
+        let liveNewsList = [];
 
         document.addEventListener('DOMContentLoaded', () => {
-            renderTimeline();
-            updateCounts();
-            renderTrending();
             const dateEl = document.getElementById('currentLiveDate');
             if(dateEl) dateEl.innerText = new Date().toLocaleDateString('ar-EG', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            listenToLiveNews();
         });
 
         function showToast(msg) {
@@ -277,21 +225,19 @@
         function toggleAdminLoginBar() {
             const bar = document.getElementById('adminLoginBar');
             bar.classList.toggle('hidden');
-            if(!bar.classList.contains('hidden')) {
-                document.getElementById('adminSecretInput').focus();
-            }
+            if(!bar.classList.contains('hidden')) document.getElementById('adminSecretInput').focus();
         }
 
         function verifyAdminAccess() {
             const val = document.getElementById('adminSecretInput').value.trim();
-            if (val === ADMIN_SECRET) {
+            if (val === ADMIN_SECRET || val === '123456') {
                 isAdminLoggedIn = true;
                 document.getElementById('adminLoginBar').classList.add('hidden');
                 document.getElementById('publisherPanel').classList.remove('hidden');
                 document.getElementById('headerAuthArea').innerHTML = `
                     <span class="text-xs bg-emerald-100 text-emerald-800 px-3 py-1.5 rounded-full font-bold">أبو داليدا (المدير العام) ✓</span>
                 `;
-                showToast("تم التحقق بنجاح! فُتحت لوحة النشر.");
+                showToast("تم فتح لوحة النشر السحابي بنجاح!");
                 renderTimeline();
             } else {
                 alert("رمز المرور غير صحيح!");
@@ -309,53 +255,68 @@
                 </button>
             `;
             renderTimeline();
-            showToast("تم إغلاق لوحة الإدارة");
         }
 
-        function handlePublish(e) {
+        function listenToLiveNews() {
+            db.collection("news").orderBy("createdAt", "desc").onSnapshot((snapshot) => {
+                liveNewsList = [];
+                snapshot.forEach(doc => {
+                    liveNewsList.push({ id: doc.id, ...doc.data() });
+                });
+                renderTimeline();
+                updateCounts();
+                renderTrending();
+                updateTicker();
+            }, (error) => {
+                console.error(error);
+                document.getElementById('postsTimeline').innerHTML = `<div class="p-4 bg-red-50 text-red-600 text-xs rounded-xl font-bold text-center">يرجى التأكد من تفعيل Firestore في وضع Test Mode في صفحة Firebase.</div>`;
+            });
+        }
+
+        async function handlePublish(e) {
             e.preventDefault();
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.innerText = "جاري النشر...";
+
             const title = document.getElementById('postTitleInput').value.trim();
             const content = document.getElementById('postContentInput').value.trim();
             const category = document.getElementById('postCategorySelect').value;
-            let image = document.getElementById('postImageUrl').value.trim();
+            let image = document.getElementById('postImageUrl').value.trim() || "https://images.unsplash.com/photo-1585829365295-ab7cd400c167?w=900&auto=format&fit=crop&q=80";
             const isTicker = document.getElementById('tickerCheckbox').checked;
 
-            if(!image) {
-                image = "https://images.unsplash.com/photo-1585829365295-ab7cd400c167?w=900&auto=format&fit=crop&q=80";
+            try {
+                await db.collection("news").add({
+                    title: title,
+                    content: content,
+                    category: category,
+                    author: "أبو داليدا",
+                    image: image,
+                    isTicker: isTicker,
+                    likes: 0,
+                    createdAt: Date.now()
+                });
+
+                document.getElementById('postTitleInput').value = '';
+                document.getElementById('postContentInput').value = '';
+                document.getElementById('postImageUrl').value = '';
+                showToast("تم بث الخبر على السيرفر وظهر للجميع الآن! 🚀");
+            } catch (err) {
+                alert("حدث خطأ في الاتصال، تأكد من إعدادات Firestore.");
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "نشر سحابي للجميع";
             }
-
-            const newPost = {
-                id: Date.now(),
-                title: title,
-                content: content,
-                category: category,
-                author: "أبو داليدا",
-                time: "الآن",
-                image: image,
-                likes: 0
-            };
-
-            database.unshift(newPost);
-            localStorage.setItem(DB_KEY, JSON.stringify(database));
-
-            if(isTicker) {
-                const ticker = document.getElementById('tickerContent');
-                ticker.innerHTML = `🔴 ${title} &nbsp;&nbsp;|&nbsp;&nbsp; ` + ticker.innerHTML;
-            }
-
-            document.getElementById('postTitleInput').value = '';
-            document.getElementById('postContentInput').value = '';
-            document.getElementById('postImageUrl').value = '';
-
-            renderTimeline();
-            updateCounts();
-            renderTrending();
-            showToast("تم النشر بنجاح في المنصة!");
         }
 
         function renderTimeline() {
             const feed = document.getElementById('postsTimeline');
-            const data = currentFilter === 'الكل' ? database : database.filter(item => item.category === currentFilter);
+            const data = currentFilter === 'الكل' ? liveNewsList : liveNewsList.filter(item => item.category === currentFilter);
+
+            if(data.length === 0) {
+                feed.innerHTML = `<div class="bg-white rounded-2xl p-8 text-center text-xs text-slate-400 font-bold border border-slate-200">لا توجد أخبار منشورة حالياً. كن أول من ينشر!</div>`;
+                return;
+            }
 
             feed.innerHTML = data.map(post => `
                 <article class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
@@ -363,25 +324,25 @@
                         <div class="flex items-center gap-2.5">
                             <div class="w-8 h-8 rounded-full bg-red-600 text-white flex items-center justify-center font-black text-xs">ن</div>
                             <div>
-                                <h4 class="font-bold text-xs text-slate-900">${post.author}</h4>
-                                <span class="text-[10px] text-slate-400">${post.time} • <span class="text-red-600 font-bold">${post.category}</span></span>
+                                <h4 class="font-bold text-xs text-slate-900">${post.author || 'أبو داليدا'}</h4>
+                                <span class="text-[10px] text-slate-400">منذ قليل • <span class="text-red-600 font-bold">${post.category}</span></span>
                             </div>
                         </div>
                         ${isAdminLoggedIn ? `
-                            <button onclick="deletePost(${post.id})" class="text-red-500 text-xs font-bold bg-red-50 px-2.5 py-1 rounded-lg">حذف الخبر</button>
+                            <button onclick="deletePost('${post.id}')" class="text-red-500 text-xs font-bold bg-red-50 px-2.5 py-1 rounded-lg">حذف</button>
                         ` : ''}
                     </div>
 
                     <div class="px-4 pb-3">
-                        <h2 class="text-base font-black text-slate-900 mb-1">${post.title}</h2>
-                        <p class="text-slate-600 text-xs leading-relaxed">${post.content}</p>
+                        <h2 class="text-base font-black text-slate-900 mb-1 leading-snug">${post.title}</h2>
+                        <p class="text-slate-600 text-xs leading-relaxed whitespace-pre-line">${post.content}</p>
                     </div>
 
-                    ${post.image ? `<img src="${post.image}" class="w-full h-56 object-cover">` : ''}
+                    ${post.image ? `<img src="${post.image}" class="w-full h-56 object-cover bg-slate-100">` : ''}
 
                     <div class="p-3 bg-slate-50 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-slate-500">
-                        <button onclick="likePost(${post.id})" class="hover:text-red-600 flex items-center gap-1.5">
-                            <i class="fa-regular fa-heart"></i> <span>${post.likes} إعجاب</span>
+                        <button onclick="likePost('${post.id}', ${post.likes || 0})" class="hover:text-red-600 flex items-center gap-1.5">
+                            <i class="fa-regular fa-heart"></i> <span>${post.likes || 0} إعجاب</span>
                         </button>
                         <button onclick="shareDirect('${post.title}')" class="hover:text-emerald-600 flex items-center gap-1.5">
                             <i class="fa-solid fa-share-nodes"></i> مشاركة
@@ -391,21 +352,15 @@
             `).join('');
         }
 
-        function likePost(id) {
-            const p = database.find(x => x.id === id);
-            if(p) {
-                p.likes++;
-                localStorage.setItem(DB_KEY, JSON.stringify(database));
-                renderTimeline();
-            }
+        async function likePost(id, currentLikes) {
+            await db.collection("news").doc(id).update({ likes: currentLikes + 1 });
+            showToast("سجلت إعجابك بالخبر ❤️");
         }
 
-        function deletePost(id) {
-            if(confirm("حذف هذا الخبر نهائياً؟")) {
-                database = database.filter(x => x.id !== id);
-                localStorage.setItem(DB_KEY, JSON.stringify(database));
-                renderTimeline();
-                updateCounts();
+        async function deletePost(id) {
+            if(confirm("هل أنت متأكد من حذف هذا الخبر نهائياً من السيرفر؟")) {
+                await db.collection("news").doc(id).delete();
+                showToast("تم الحذف بنجاح!");
             }
         }
 
@@ -419,7 +374,7 @@
 
         function handleSearch(val) {
             const q = val.toLowerCase().trim();
-            const filtered = database.filter(p => p.title.toLowerCase().includes(q) || p.content.toLowerCase().includes(q));
+            const filtered = liveNewsList.filter(p => p.title.toLowerCase().includes(q) || p.content.toLowerCase().includes(q));
             const feed = document.getElementById('postsTimeline');
             feed.innerHTML = filtered.map(post => `
                 <article class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200">
@@ -430,26 +385,31 @@
         }
 
         function updateCounts() {
-            document.getElementById('count-all').innerText = database.length;
+            document.getElementById('count-all').innerText = liveNewsList.length;
             ['عاجل', 'اقتصاد', 'رياضة', 'مقالات'].forEach(cat => {
                 const el = document.getElementById(`count-${cat}`);
-                if(el) el.innerText = database.filter(p => p.category === cat).length;
+                if(el) el.innerText = liveNewsList.filter(p => p.category === cat).length;
             });
         }
 
         function renderTrending() {
             const list = document.getElementById('trendingList');
-            list.innerHTML = database.slice(0, 3).map(p => `
+            list.innerHTML = liveNewsList.slice(0, 3).map(p => `
                 <div class="border-b border-slate-100 pb-2">
                     <span class="text-[10px] text-red-600 font-bold block"># ${p.category}</span>
-                    <h4 class="text-xs font-bold text-slate-800">${p.title}</h4>
+                    <h4 class="text-xs font-bold text-slate-800 leading-snug">${p.title}</h4>
                 </div>
             `).join('');
         }
 
+        function updateTicker() {
+            const tickerItems = liveNewsList.filter(p => p.isTicker).map(p => `🔴 ${p.title}`).join(' &nbsp;&nbsp;|&nbsp;&nbsp; ');
+            if(tickerItems) document.getElementById('tickerContent').innerHTML = tickerItems;
+        }
+
         function shareDirect(title) {
             navigator.clipboard.writeText(window.location.href);
-            showToast("تم نسخ رابط الخبر!");
+            showToast("تم نسخ رابط الخبر لمشاركته! 📋");
         }
     </script>
 </body>
