@@ -8,7 +8,6 @@
     <meta name="description" content="نبض مصر - منصة إخبارية ومقالات وتحليلات حصرية وتغطيات على مدار الساعة.">
     <meta property="og:title" content="منصة نبض مصر الإخبارية">
     <meta property="og:description" content="متابعة حية وشاملة لأهم أخبار مصر والعالم، تحليلات اقتصادية، رياضة، ومقالات رأي.">
-    <meta property="og:type" content="website">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -52,17 +51,11 @@
             animation: ticker 30s linear infinite;
         }
         .ticker-move:hover { animation-play-state: paused; }
-
-        .fade-in { animation: fadeIn 0.3s ease-out forwards; }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(6px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
     </style>
 </head>
-<body class="text-slate-800 antialiased min-h-screen flex flex-col selection:bg-red-500 selection:text-white relative">
+<body class="text-slate-800 antialiased min-h-screen flex flex-col selection:bg-red-500 selection:text-white">
 
-    <div id="toast" class="fixed bottom-5 left-5 z-[100000] bg-slate-900 text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-3 transform translate-y-28 opacity-0 transition-all duration-300 pointer-events-none">
+    <div id="toast" class="fixed bottom-5 left-5 z-50 bg-slate-900 text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-3 transform translate-y-28 opacity-0 transition-all duration-300 pointer-events-none">
         <i id="toastIcon" class="fa-solid fa-circle-check text-green-400 text-xl"></i>
         <span id="toastMessage" class="text-sm font-bold">تم الإجراء بنجاح</span>
     </div>
@@ -81,12 +74,11 @@
         </div>
     </div>
 
-    <header class="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-30 border-b border-slate-200">
+    <header class="bg-white shadow-sm sticky top-0 z-30 border-b border-slate-200">
         <div class="max-w-7xl mx-auto px-3 sm:px-6 h-16 flex items-center justify-between gap-4">
-            
             <div class="flex items-center gap-3">
-                <a href="#" class="flex items-center gap-2.5 text-primary font-black text-2xl tracking-tight group">
-                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-red-600 to-red-800 flex items-center justify-center text-white shadow-md shadow-red-500/30 group-hover:scale-105 transition-transform">
+                <a href="#" class="flex items-center gap-2.5 text-primary font-black text-2xl tracking-tight">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-red-600 to-red-800 flex items-center justify-center text-white shadow-md">
                         <i class="fa-solid fa-bolt-lightning text-xl"></i>
                     </div>
                     <div class="flex flex-col leading-none">
@@ -97,31 +89,25 @@
             </div>
 
             <div class="relative flex-1 max-w-md hidden sm:block">
-                <input type="text" id="searchInput" onkeyup="handleSearch(this.value)" placeholder="ابحث عن خبر، تقرير، أو موضوع..." class="w-full bg-slate-100 text-xs sm:text-sm rounded-full py-2.5 pr-11 pl-4 border border-transparent focus:border-red-500 focus:bg-white focus:outline-none transition-all placeholder:text-slate-400">
-                <i class="fa-solid fa-magnifying-glass absolute right-4 top-3.5 text-slate-400 text-sm"></i>
+                <input type="text" id="searchInput" onkeyup="handleSearch(this.value)" placeholder="ابحث في الأخبار..." class="w-full bg-slate-100 text-xs sm:text-sm rounded-full py-2 pr-10 pl-4 border border-transparent focus:border-red-500 focus:bg-white focus:outline-none">
+                <i class="fa-solid fa-magnifying-glass absolute right-3.5 top-3 text-slate-400 text-sm"></i>
             </div>
 
-            <div class="flex items-center gap-3">
-                <div id="adminBadgeWrapper">
-                    <button type="button" onclick="openAuthModal()" class="cursor-pointer bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-xl text-xs sm:text-sm font-bold flex items-center gap-2 transition shadow-md shadow-red-500/20 active:scale-95">
-                        <i class="fa-solid fa-lock text-xs"></i>
-                        <span>دخول المدير</span>
-                    </button>
-                </div>
+            <div id="headerAdminStatus">
+                <span class="text-xs bg-red-50 text-red-600 px-3 py-1.5 rounded-full font-bold border border-red-200">لوحة النشر بالأسفل ⬇️</span>
             </div>
-
         </div>
     </header>
 
-    <div class="bg-gradient-to-r from-red-700 via-red-600 to-red-800 text-white text-xs sm:text-sm py-2 px-3 shadow-inner flex items-center">
+    <div class="bg-red-600 text-white text-xs sm:text-sm py-2 px-3 shadow-inner flex items-center">
         <div class="max-w-7xl mx-auto w-full flex items-center gap-3">
-            <div class="flex items-center gap-1.5 font-black bg-black/30 px-3 py-1 rounded-full text-xs shrink-0 tracking-wider">
+            <div class="flex items-center gap-1.5 font-black bg-black/30 px-3 py-1 rounded-full text-xs shrink-0">
                 <span class="w-2 h-2 rounded-full bg-yellow-300 animate-ping"></span>
                 عاجل نبض مصر
             </div>
             <div class="overflow-hidden w-full font-bold relative">
                 <div id="tickerContent" class="ticker-move">
-                    🔴 الحكومة المصرية تعلن استمرار التسهيلات الضريبية لدعم المصنعين &nbsp;&nbsp;|&nbsp;&nbsp; 🔴 البنك المركزي: ارتفاع صافي الاحتياطيات الدولية من النقد الأجنبي &nbsp;&nbsp;|&nbsp;&nbsp; 🔴 منتخب مصر يواصل استعداداته لمواجهات تصفيات كأس الأمم
+                    🔴 الحكومة المصرية تعلن استمرار التسهيلات لدعم المصنعين &nbsp;&nbsp;|&nbsp;&nbsp; 🔴 البنك المركزي: ارتفاع صافي الاحتياطيات الدولية &nbsp;&nbsp;|&nbsp;&nbsp; 🔴 منتخب مصر يواصل استعداداته لمواجهات تصفيات كأس الأمم
                 </div>
             </div>
         </div>
@@ -130,242 +116,134 @@
     <div class="max-w-7xl mx-auto px-3 sm:px-6 py-6 grid grid-cols-1 lg:grid-cols-12 gap-6 w-full flex-grow">
 
         <aside class="lg:col-span-3 space-y-4">
-            
             <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200">
                 <h3 class="font-black text-slate-900 text-sm mb-3 pb-2 border-b border-slate-100 flex items-center justify-between">
                     <span class="flex items-center gap-2"><i class="fa-solid fa-layer-group text-red-600"></i> الأقسام</span>
                     <span id="activeFilterBadge" class="text-[10px] bg-red-100 text-red-700 px-2 py-0.5 rounded-full font-black">الكل</span>
                 </h3>
 
-                <nav class="space-y-1" id="categoriesNav">
-                    <button onclick="setCategoryFilter('الكل', this)" class="cat-nav-btn w-full flex items-center justify-between px-3 py-2.5 rounded-xl bg-red-600 text-white font-bold text-xs transition">
-                        <span class="flex items-center gap-2.5"><i class="fa-solid fa-globe w-4"></i> كل التغطيات</span>
-                        <span class="text-[10px] px-2 py-0.5 rounded-full bg-white/20" id="count-all">0</span>
+                <nav class="space-y-1">
+                    <button onclick="setCategoryFilter('الكل', this)" class="cat-nav-btn w-full flex items-center justify-between px-3 py-2 rounded-xl bg-red-600 text-white font-bold text-xs transition">
+                        <span>كل التغطيات</span>
+                        <span id="count-all" class="text-[10px] px-2 py-0.5 rounded-full bg-white/20">0</span>
                     </button>
-                    <button onclick="setCategoryFilter('عاجل', this)" class="cat-nav-btn w-full flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-slate-100 text-slate-700 font-bold text-xs transition">
-                        <span class="flex items-center gap-2.5"><i class="fa-solid fa-triangle-exclamation text-red-500 w-4"></i> أخبار عاجلة</span>
-                        <span class="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 text-slate-700" id="count-عاجل">0</span>
+                    <button onclick="setCategoryFilter('عاجل', this)" class="cat-nav-btn w-full flex items-center justify-between px-3 py-2 rounded-xl hover:bg-slate-100 text-slate-700 font-bold text-xs transition">
+                        <span>أخبار عاجلة</span>
+                        <span id="count-عاجل" class="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 text-slate-700">0</span>
                     </button>
-                    <button onclick="setCategoryFilter('اقتصاد', this)" class="cat-nav-btn w-full flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-slate-100 text-slate-700 font-bold text-xs transition">
-                        <span class="flex items-center gap-2.5"><i class="fa-solid fa-chart-line text-emerald-600 w-4"></i> مال واقتصاد</span>
-                        <span class="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 text-slate-700" id="count-اقتصاد">0</span>
+                    <button onclick="setCategoryFilter('اقتصاد', this)" class="cat-nav-btn w-full flex items-center justify-between px-3 py-2 rounded-xl hover:bg-slate-100 text-slate-700 font-bold text-xs transition">
+                        <span>مال واقتصاد</span>
+                        <span id="count-اقتصاد" class="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 text-slate-700">0</span>
                     </button>
-                    <button onclick="setCategoryFilter('رياضة', this)" class="cat-nav-btn w-full flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-slate-100 text-slate-700 font-bold text-xs transition">
-                        <span class="flex items-center gap-2.5"><i class="fa-solid fa-futbol text-blue-600 w-4"></i> رياضة</span>
-                        <span class="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 text-slate-700" id="count-رياضة">0</span>
+                    <button onclick="setCategoryFilter('رياضة', this)" class="cat-nav-btn w-full flex items-center justify-between px-3 py-2 rounded-xl hover:bg-slate-100 text-slate-700 font-bold text-xs transition">
+                        <span>رياضة</span>
+                        <span id="count-رياضة" class="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 text-slate-700">0</span>
                     </button>
-                    <button onclick="setCategoryFilter('مقالات', this)" class="cat-nav-btn w-full flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-slate-100 text-slate-700 font-bold text-xs transition">
-                        <span class="flex items-center gap-2.5"><i class="fa-solid fa-feather text-purple-600 w-4"></i> مقالات ورأي</span>
-                        <span class="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 text-slate-700" id="count-مقالات">0</span>
-                    </button>
-                    <button onclick="setCategoryFilter('تكنولوجيا', this)" class="cat-nav-btn w-full flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-slate-100 text-slate-700 font-bold text-xs transition">
-                        <span class="flex items-center gap-2.5"><i class="fa-solid fa-microchip text-amber-600 w-4"></i> تكنولوجيا</span>
-                        <span class="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 text-slate-700" id="count-تكنولوجيا">0</span>
+                    <button onclick="setCategoryFilter('مقالات', this)" class="cat-nav-btn w-full flex items-center justify-between px-3 py-2 rounded-xl hover:bg-slate-100 text-slate-700 font-bold text-xs transition">
+                        <span>مقالات ورأي</span>
+                        <span id="count-مقالات" class="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 text-slate-700">0</span>
                     </button>
                 </nav>
             </div>
-
-            <div class="bg-gradient-to-r from-slate-200 to-slate-300 rounded-2xl p-4 text-center border border-dashed border-slate-400">
-                <span class="text-[10px] uppercase tracking-wider font-bold text-slate-500 block mb-1">مساحة إعلانية</span>
-                <p class="text-xs font-black text-slate-700">للإعلان في نبض مصر: contact@nabdmasr.eg</p>
-            </div>
-
         </aside>
 
         <main class="lg:col-span-6 space-y-6">
 
-            <div id="publisherWrapper" class="bg-white rounded-2xl p-4 sm:p-5 shadow-sm border border-slate-200">
-                <div id="adminLockedState" class="text-center py-5">
-                    <div class="w-12 h-12 rounded-full bg-red-50 text-red-600 flex items-center justify-center mx-auto mb-2 text-xl">
-                        <i class="fa-solid fa-shield-halved"></i>
+            <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
+                
+                <div id="loginStep" class="text-center py-3">
+                    <div class="w-12 h-12 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-2 text-xl font-bold">
+                        <i class="fa-solid fa-lock"></i>
                     </div>
-                    <h4 class="text-sm font-bold text-slate-800 mb-1">لوحة نشر وتوجيه الأخبار مقفلة</h4>
-                    <p class="text-xs text-slate-400 mb-3">خاصة برئيس التحرير ومحرري منصة نبض مصر فقط</p>
-                    <button type="button" onclick="openAuthModal()" class="cursor-pointer bg-slate-900 hover:bg-black text-white text-xs font-bold px-4 py-2 rounded-xl transition active:scale-95">
-                        تسجيل دخول بصلاحية الأدمن
-                    </button>
+                    <h3 class="text-sm font-black text-slate-900 mb-1">دخول رئيس التحرير لنشر خبر جديد</h3>
+                    <p class="text-xs text-slate-400 mb-3">اكتب كلمة المرور واضغط تأكيد لفتح لوحة النشر فوراً</p>
+                    
+                    <div class="flex max-w-xs mx-auto gap-2">
+                        <input type="password" id="inlinePassword" placeholder="اكتب: 123456" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs text-center font-bold focus:outline-none focus:border-red-500">
+                        <button onclick="checkAdminPassword()" class="bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-4 py-2 rounded-xl shrink-0">
+                            تأكيد الدخول
+                        </button>
+                    </div>
                 </div>
 
-                <div id="adminActiveState" class="hidden">
+                <div id="publishStep" class="hidden">
                     <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-3">
-                        <div class="flex items-center gap-2.5">
-                            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80" alt="Admin" class="w-9 h-9 rounded-full object-cover border-2 border-red-500" onerror="this.src='https://ui-avatars.com/api/?name=Abu+Dalida&background=dc2626&color=fff'">
-                            <div>
-                                <h4 class="text-xs font-black text-slate-900">أبو داليدا (المدير العام)</h4>
-                                <span class="text-[10px] text-emerald-600 font-bold">● متصل بصلاحية النشر والحذف</span>
-                            </div>
-                        </div>
-                        <button type="button" onclick="logoutAdmin()" class="cursor-pointer text-xs text-red-500 hover:underline font-bold">خروج</button>
+                        <span class="text-xs font-black text-emerald-600">● مرحباً بك يا أبا داليدا (جاهز للنشر)</span>
+                        <button onclick="logoutAdminDirect()" class="text-xs text-red-500 font-bold hover:underline">قفل اللوحة</button>
                     </div>
 
-                    <form id="newsPublishForm" onsubmit="handlePublish(event)" class="space-y-3">
-                        <input type="text" id="postTitleInput" placeholder="عنوان الخبر أو التغطية الصحفية..." required class="w-full text-sm font-bold bg-slate-50 rounded-xl px-3.5 py-2.5 border border-slate-200 focus:outline-none focus:border-red-500 focus:bg-white transition">
+                    <form onsubmit="handlePublish(event)" class="space-y-3">
+                        <input type="text" id="postTitleInput" placeholder="عنوان الخبر أو المقال..." required class="w-full text-sm font-bold bg-slate-50 rounded-xl px-3.5 py-2.5 border border-slate-200 focus:outline-none focus:border-red-500">
                         
-                        <div class="flex items-center gap-1.5 bg-slate-100 p-1.5 rounded-lg text-slate-600 text-xs">
-                            <span class="text-[10px] font-bold text-slate-400 pl-2">تنسيق:</span>
-                            <button type="button" onclick="formatText('bold')" class="px-2 py-1 bg-white rounded font-bold hover:bg-slate-200">B عريض</button>
-                            <button type="button" onclick="formatText('quote')" class="px-2 py-1 bg-white rounded italic hover:bg-slate-200">" اقتباس "</button>
-                            <button type="button" onclick="formatText('bullet')" class="px-2 py-1 bg-white rounded hover:bg-slate-200">• نقطة</button>
-                        </div>
-
-                        <textarea id="postContentInput" rows="4" placeholder="نص التغطية أو المقال بالتفصيل..." required class="w-full bg-slate-50 rounded-xl p-3.5 text-xs sm:text-sm border border-slate-200 focus:outline-none focus:border-red-500 focus:bg-white resize-none transition"></textarea>
+                        <textarea id="postContentInput" rows="3" placeholder="تفاصيل المحتوى..." required class="w-full bg-slate-50 rounded-xl p-3 text-xs sm:text-sm border border-slate-200 focus:outline-none focus:border-red-500 resize-none"></textarea>
                         
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                            <select id="postCategorySelect" class="bg-slate-50 border border-slate-200 text-xs font-bold rounded-xl px-3 py-2.5 focus:outline-none">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            <select id="postCategorySelect" class="bg-slate-50 border border-slate-200 text-xs font-bold rounded-xl px-3 py-2">
                                 <option value="عاجل">🚨 تصنيف: عاجل</option>
                                 <option value="اقتصاد">💰 تصنيف: مال واقتصاد</option>
                                 <option value="رياضة">⚽ تصنيف: رياضة</option>
-                                <option value="مقالات">✍️ تصنيف: مقال ورأي</option>
-                                <option value="تكنولوجيا">💡 تصنيف: تكنولوجيا</option>
+                                <option value="مقالات">✍️ تصنيف: مقالات</option>
                             </select>
 
-                            <div class="relative">
-                                <label for="postImageFile" class="w-full bg-slate-50 border border-slate-200 hover:bg-slate-100 text-slate-600 text-xs font-bold rounded-xl px-3 py-2.5 flex items-center justify-center gap-2 cursor-pointer transition">
-                                    <i class="fa-solid fa-cloud-arrow-up text-red-500"></i>
-                                    <span id="fileUploadLabel">ارفع صورة من جهازك</span>
-                                </label>
-                                <input type="file" id="postImageFile" accept="image/*" onchange="handleFileSelected(this)" class="hidden">
-                            </div>
+                            <input type="url" id="postImageUrl" placeholder="رابط صورة (اختياري)..." class="bg-slate-50 border border-slate-200 text-xs rounded-xl px-3 py-2 focus:outline-none">
                         </div>
 
-                        <div class="flex items-center gap-2 pt-1">
-                            <input type="checkbox" id="tickerCheckbox" class="w-4 h-4 text-red-600 rounded accent-red-600 cursor-pointer">
-                            <label for="tickerCheckbox" class="text-xs font-bold text-slate-700 cursor-pointer">بث هذا العنوان أيضاً في شريط العاجل المتحرك ⚡</label>
-                        </div>
-
-                        <div class="pt-2 flex justify-end">
-                            <button type="submit" class="cursor-pointer bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-2.5 rounded-xl text-xs sm:text-sm shadow-md shadow-red-500/30 flex items-center gap-2 transition active:scale-95">
-                                <i class="fa-solid fa-paper-plane"></i>
-                                <span>نشر فوري في المنصة</span>
+                        <div class="flex items-center justify-between pt-2">
+                            <label class="text-xs font-bold text-slate-600 flex items-center gap-1.5 cursor-pointer">
+                                <input type="checkbox" id="tickerCheckbox" class="accent-red-600">
+                                إضافة للشريط العاجل
+                            </label>
+                            <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-2 rounded-xl text-xs shadow-md">
+                                نشر الخبر الآن
                             </button>
                         </div>
                     </form>
                 </div>
+
             </div>
 
-            <div id="postsTimeline" class="space-y-5">
-            </div>
+            <div id="postsTimeline" class="space-y-4"></div>
 
         </main>
 
         <aside class="lg:col-span-3 space-y-4">
-            
             <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200">
                 <h3 class="font-black text-slate-900 text-xs sm:text-sm mb-3 pb-2 border-b border-slate-100 flex items-center gap-2">
                     <i class="fa-solid fa-fire text-amber-500"></i> الأكثر قراءة اليوم
                 </h3>
-                <div class="space-y-3" id="trendingList">
-                </div>
+                <div class="space-y-3" id="trendingList"></div>
             </div>
-
-            <div class="bg-gradient-to-br from-red-600 to-red-800 rounded-2xl p-4 text-white shadow-lg text-center">
-                <i class="fa-solid fa-paper-plane text-2xl text-white/90 mb-2"></i>
-                <h4 class="font-black text-sm mb-1">نشرة نبض مصر الإخبارية</h4>
-                <p class="text-[11px] text-red-100 mb-3">ملخص يومي لأهم التطورات على بريدك</p>
-                <form onsubmit="handleNewsletter(event)" class="space-y-2">
-                    <input type="email" placeholder="اكتب بريدك الإلكتروني" required class="w-full bg-white text-slate-900 text-xs px-3 py-2 rounded-xl text-center focus:outline-none">
-                    <button class="w-full bg-slate-950 hover:bg-black text-white text-xs font-bold py-2 rounded-xl transition">اشتراك فوري</button>
-                </form>
-            </div>
-
-            <p class="text-center text-[11px] text-slate-400 font-bold">جميع الحقوق محفوظة © نبض مصر 2026</p>
+            <p class="text-center text-xs text-slate-400 font-bold">منصة نبض مصر © 2026</p>
         </aside>
 
     </div>
 
-    <div id="authModal" class="fixed inset-0 bg-black/70 backdrop-blur-md z-[99999] hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl p-6 max-w-sm w-full shadow-2xl border border-slate-200 relative fade-in">
-            <button type="button" onclick="closeAuthModal()" class="absolute top-4 left-4 text-slate-400 hover:text-slate-600 p-2"><i class="fa-solid fa-xmark text-xl"></i></button>
-            
-            <div class="text-center mb-5">
-                <div class="w-12 h-12 rounded-2xl bg-red-600 text-white flex items-center justify-center mx-auto mb-2 text-xl shadow-lg shadow-red-500/30">
-                    <i class="fa-solid fa-key"></i>
-                </div>
-                <h3 class="text-base font-black text-slate-900">تسجيل دخول رئيس التحرير</h3>
-                <p class="text-xs text-slate-400 mt-1">أدخل كلمة المرور الخاصة بالإدارة للتحكم في المنصة</p>
-            </div>
-
-            <form onsubmit="handleAdminLogin(event)" class="space-y-3">
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">كلمة المرور الإدارية</label>
-                    <input type="password" id="adminPasswordInput" placeholder="أدخل كلمة المرور (الافتراضية: 123456)" required class="w-full bg-slate-50 border border-slate-200 text-xs rounded-xl px-3.5 py-2.5 focus:outline-none focus:border-red-500 text-center font-bold">
-                </div>
-                <button type="submit" class="w-full cursor-pointer bg-red-600 hover:bg-red-700 text-white font-bold text-xs py-2.5 rounded-xl transition shadow-md shadow-red-500/20 active:scale-95">
-                    تأكيد الدخول
-                </button>
-            </form>
-        </div>
-    </div>
-
-    <div id="readerModal" class="fixed inset-0 bg-black/75 backdrop-blur-md z-[99999] hidden overflow-y-auto p-3 sm:p-6 flex justify-center items-center">
-        <div class="bg-white rounded-3xl max-w-2xl w-full my-auto shadow-2xl overflow-hidden fade-in border border-slate-100 max-h-[90vh] flex flex-col">
-            <div class="p-4 sm:p-5 flex items-center justify-between border-b border-slate-100 bg-white shrink-0">
-                <div class="flex items-center gap-2">
-                    <button type="button" onclick="changeFontSize(1)" class="w-8 h-8 rounded-lg bg-slate-100 text-xs font-bold hover:bg-slate-200" title="تكبير الخط">A+</button>
-                    <button type="button" onclick="changeFontSize(-1)" class="w-8 h-8 rounded-lg bg-slate-100 text-xs font-bold hover:bg-slate-200" title="تصغير الخط">A-</button>
-                    <span class="text-xs text-slate-400 mr-2" id="readingTimeEstimate"><i class="fa-regular fa-clock"></i> دقيقة قراءة</span>
-                </div>
-                <button type="button" onclick="closeReaderModal()" class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 hover:text-slate-800 flex items-center justify-center">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
-            </div>
-
-            <div class="p-5 sm:p-8 space-y-4 overflow-y-auto">
-                <div class="flex items-center gap-2">
-                    <span id="modalCategoryBadge" class="text-xs font-bold px-2.5 py-1 rounded-full bg-red-100 text-red-700">عاجل</span>
-                    <span id="modalDate" class="text-xs text-slate-400 font-medium">الآن</span>
-                </div>
-                <h1 id="modalTitle" class="text-xl sm:text-2xl font-black text-slate-900 leading-tight">عنوان الخبر</h1>
-                <img id="modalImage" src="" alt="News Cover" class="w-full h-64 sm:h-80 object-cover rounded-2xl shadow-sm">
-                <div id="modalContent" class="text-sm sm:text-base text-slate-700 leading-loose whitespace-pre-line pt-2"></div>
-            </div>
-        </div>
-    </div>
-
     <script>
-        const DB_KEY = 'NABDMASR_NEWS_STORAGE_V1';
+        const DB_KEY = 'NABDMASR_NEWS_V2';
         let isAdminLoggedIn = false;
-        let selectedUploadedImageBase64 = '';
         let currentFilter = 'الكل';
-        let currentReaderFontSize = 15;
 
         const defaultNews = [
             {
                 id: 1,
-                title: "مصر تعزز صادراتها الصناعية والزراعية بحزمة حوافز تمويلية وضريبية جديدة",
-                content: "أعلنت الجهات المعنية اليوم عن خطة استراتيجية موسعة لتمكين المصنعين والمصدرين وفتح أسواق جديدة للمنتجات الوطنية في إفريقيا وأوروبا، مع تقديم تيسيرات جمركية وضريبية متكاملة.",
+                title: "مصر تعزز صادراتها الصناعية والزراعية بحوافز تمويلية وضريبية جديدة",
+                content: "أعلنت الجهات المعنية اليوم عن خطة استراتيجية موسعة لتمكين المصنعين والمصدرين وفتح أسواق جديدة للمنتجات الوطنية.",
                 category: "اقتصاد",
                 author: "أبو داليدا",
                 time: "منذ نصف ساعة",
                 image: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=900&auto=format&fit=crop&q=80",
                 likes: 384,
-                userLiked: false,
-                comments: [
-                    { name: "أحمد المصري", text: "الصناعة والإنتاج هما قاطرة التنمية الحقيقية.", time: "منذ 15 د" }
-                ]
+                comments: []
             },
             {
                 id: 2,
                 title: "عاجل: إعلان جداول ومواعيد المنظومة التعليمية المتطورة للعام الجديد",
-                content: "كشفت وزارة التربية والتعليم عن التفاصيل التنفيذية لتطوير المناهج وتحديث آليات التقييم لجميع المراحل الدراسية لضمان أعلى معايير الجودة.",
+                content: "كشفت وزارة التربية والتعليم عن التفاصيل التنفيذية لتطوير المناهج وتحديث آليات التقييم لجميع المراحل الدراسية.",
                 category: "عاجل",
                 author: "أبو داليدا",
                 time: "منذ ساعتين",
                 image: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=900&auto=format&fit=crop&q=80",
                 likes: 512,
-                userLiked: true,
-                comments: []
-            },
-            {
-                id: 3,
-                title: "مقال رأي: الصحافة الرقمية في مصر وإعادة ابتكار أدوات السوشيال ميديا",
-                content: "الصحافة لم تعد مجرد صفحات ثابتة، بل تفاعل حي، وسرعة في نقل الحقيقة، ومحتوى ذكي يخاطب عقل القارئ ويوثق نبض المجتمع بلغة عصرية ورصينة.",
-                category: "مقالات",
-                author: "أبو داليدا",
-                time: "اليوم",
-                image: "https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=900&auto=format&fit=crop&q=80",
-                likes: 215,
-                userLiked: false,
                 comments: []
             }
         ];
@@ -375,12 +253,7 @@
             if (stored) {
                 try { return JSON.parse(stored); } catch(e) { return defaultNews; }
             }
-            localStorage.setItem(DB_KEY, JSON.stringify(defaultNews));
             return defaultNews;
-        }
-
-        function saveDatabase(data) {
-            localStorage.setItem(DB_KEY, JSON.stringify(data));
         }
 
         let database = loadDatabase();
@@ -393,10 +266,9 @@
             if(dateEl) dateEl.innerText = new Date().toLocaleDateString('ar-EG', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
         });
 
-        function showToast(msg, success = true) {
+        function showToast(msg) {
             const t = document.getElementById('toast');
             document.getElementById('toastMessage').innerText = msg;
-            document.getElementById('toastIcon').className = success ? "fa-solid fa-circle-check text-green-400 text-xl" : "fa-solid fa-circle-exclamation text-amber-400 text-xl";
             t.classList.remove('translate-y-28', 'opacity-0');
             t.classList.add('translate-y-0', 'opacity-100');
             setTimeout(() => {
@@ -405,77 +277,29 @@
             }, 3000);
         }
 
-        function openAuthModal() {
-            const modal = document.getElementById('authModal');
-            modal.classList.remove('hidden');
-            modal.style.display = 'flex';
-        }
-
-        function closeAuthModal() {
-            const modal = document.getElementById('authModal');
-            modal.classList.add('hidden');
-            modal.style.display = 'none';
-        }
-
-        function handleAdminLogin(e) {
-            e.preventDefault();
-            const pass = document.getElementById('adminPasswordInput').value.trim();
+        // التحقق من الباسورد مباشرة في الصفحة
+        function checkAdminPassword() {
+            const pass = document.getElementById('inlinePassword').value.trim();
             if (pass === '123456' || pass === 'nabd2026') {
                 isAdminLoggedIn = true;
-                document.getElementById('adminLockedState').classList.add('hidden');
-                document.getElementById('adminActiveState').classList.remove('hidden');
-                document.getElementById('adminBadgeWrapper').innerHTML = `
-                    <div class="flex items-center gap-2 bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-1.5 rounded-full text-xs font-black">
-                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                        أبو داليدا (المدير العام)
-                    </div>
+                document.getElementById('loginStep').classList.add('hidden');
+                document.getElementById('publishStep').classList.remove('hidden');
+                document.getElementById('headerAdminStatus').innerHTML = `
+                    <span class="text-xs bg-emerald-100 text-emerald-800 px-3 py-1.5 rounded-full font-bold">أبو داليدا (المدير العام) ✓</span>
                 `;
-                closeAuthModal();
-                showToast("أهلاً بك يا أبا داليدا! تم تفعيل صلاحيات النشر والحذف بالكامل.");
+                showToast("أهلاً بك يا أبا داليدا! تم فتح لوحة النشر بنجاح.");
                 renderTimeline();
             } else {
-                showToast("كلمة المرور غير صحيحة!", false);
+                alert("كلمة المرور غير صحيحة! الباسورد هو: 123456");
             }
         }
 
-        function logoutAdmin() {
+        function logoutAdminDirect() {
             isAdminLoggedIn = false;
-            document.getElementById('adminLockedState').classList.remove('hidden');
-            document.getElementById('adminActiveState').classList.add('hidden');
-            document.getElementById('adminBadgeWrapper').innerHTML = `
-                <button type="button" onclick="openAuthModal()" class="cursor-pointer bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-xl text-xs sm:text-sm font-bold flex items-center gap-2 transition">
-                    <i class="fa-solid fa-lock text-xs"></i>
-                    <span>دخول المدير</span>
-                </button>
-            `;
-            showToast("تم تسجيل الخروج من لوحة الإدارة");
+            document.getElementById('loginStep').classList.remove('hidden');
+            document.getElementById('publishStep').classList.add('hidden');
+            document.getElementById('inlinePassword').value = '';
             renderTimeline();
-        }
-
-        function handleFileSelected(input) {
-            if (input.files && input.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    selectedUploadedImageBase64 = e.target.result;
-                    document.getElementById('fileUploadLabel').innerText = "تم اختيار الصورة بنجاح ✓";
-                }
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
-
-        function formatText(type) {
-            const textarea = document.getElementById('postContentInput');
-            const start = textarea.selectionStart;
-            const end = textarea.selectionEnd;
-            const selected = textarea.value.substring(start, end);
-            let replacement = "";
-
-            if(type === 'bold') replacement = `**${selected || 'نص عريض'}**`;
-            if(type === 'quote') replacement = `\n> "${selected || 'اقتباس صحفي هـام'}"\n`;
-            if(type === 'bullet') replacement = `\n• ${selected || 'عنصر رئيسي'}`;
-
-            textarea.value = textarea.value.substring(0, start) + replacement + textarea.value.substring(end);
-            textarea.focus();
         }
 
         function handlePublish(e) {
@@ -483,16 +307,14 @@
             const title = document.getElementById('postTitleInput').value.trim();
             const content = document.getElementById('postContentInput').value.trim();
             const category = document.getElementById('postCategorySelect').value;
+            let image = document.getElementById('postImageUrl').value.trim();
             const isTicker = document.getElementById('tickerCheckbox').checked;
 
-            let image = selectedUploadedImageBase64;
             if(!image) {
-                image = category === 'رياضة' ? 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=900&auto=format&fit=crop&q=80' :
-                        category === 'اقتصاد' ? 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=900&auto=format&fit=crop&q=80' :
-                        'https://images.unsplash.com/photo-1585829365295-ab7cd400c167?w=900&auto=format&fit=crop&q=80';
+                image = "https://images.unsplash.com/photo-1585829365295-ab7cd400c167?w=900&auto=format&fit=crop&q=80";
             }
 
-            const newEntry = {
+            const newPost = {
                 id: Date.now(),
                 title: title,
                 content: content,
@@ -501,98 +323,125 @@
                 time: "الآن",
                 image: image,
                 likes: 0,
-                userLiked: false,
                 comments: []
             };
 
-            database.unshift(newEntry);
-            saveDatabase(database);
+            database.unshift(newPost);
+            localStorage.setItem(DB_KEY, JSON.stringify(database));
 
             if(isTicker) {
                 const ticker = document.getElementById('tickerContent');
                 ticker.innerHTML = `🔴 ${title} &nbsp;&nbsp;|&nbsp;&nbsp; ` + ticker.innerHTML;
             }
 
-            document.getElementById('newsPublishForm').reset();
-            selectedUploadedImageBase64 = '';
-            document.getElementById('fileUploadLabel').innerText = "ارفع صورة من جهازك";
+            document.getElementById('postTitleInput').value = '';
+            document.getElementById('postContentInput').value = '';
+            document.getElementById('postImageUrl').value = '';
 
             renderTimeline();
             updateCounts();
             renderTrending();
-            showToast("تم نشر الخبر وحفظه في المنصة بنجاح!");
+            showToast("تم نشر الخبر بنجاح في المنصة!");
         }
 
-        function renderTimeline(dataList = null) {
+        function renderTimeline() {
             const feed = document.getElementById('postsTimeline');
-            const data = dataList || (currentFilter === 'الكل' ? database : database.filter(item => item.category === currentFilter));
+            const data = currentFilter === 'الكل' ? database : database.filter(item => item.category === currentFilter);
 
-            if (data.length === 0) {
-                feed.innerHTML = `
-                    <div class="bg-white rounded-2xl p-8 text-center border border-slate-200">
-                        <i class="fa-regular fa-newspaper text-4xl text-slate-300 mb-2"></i>
-                        <p class="text-xs font-bold text-slate-500">لا توجد أخبار في هذا التصنيف حالياً.</p>
-                    </div>
-                `;
-                return;
-            }
-
-            feed.innerHTML = data.map(post => {
-                const badgeColor = post.category === 'عاجل' ? 'bg-red-100 text-red-700' :
-                                   post.category === 'اقتصاد' ? 'bg-emerald-100 text-emerald-700' :
-                                   post.category === 'رياضة' ? 'bg-blue-100 text-blue-700' :
-                                   post.category === 'مقالات' ? 'bg-purple-100 text-purple-700' : 'bg-amber-100 text-amber-700';
-
-                return `
-                <article class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden fade-in">
-                    
+            feed.innerHTML = data.map(post => `
+                <article class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
                     <div class="p-4 flex items-center justify-between">
                         <div class="flex items-center gap-2.5">
-                            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80" class="w-9 h-9 rounded-full object-cover border border-red-500" onerror="this.src='https://ui-avatars.com/api/?name=Abu+Dalida&background=dc2626&color=fff'">
+                            <div class="w-8 h-8 rounded-full bg-red-600 text-white flex items-center justify-center font-black text-xs">ن</div>
                             <div>
-                                <h4 class="font-bold text-xs text-slate-900 flex items-center gap-1">${post.author} <i class="fa-solid fa-circle-check text-blue-500 text-[10px]"></i></h4>
-                                <span class="text-[10px] text-slate-400">${post.time} • <span class="font-bold px-1.5 py-0.2 rounded ${badgeColor}">${post.category}</span></span>
+                                <h4 class="font-bold text-xs text-slate-900">${post.author}</h4>
+                                <span class="text-[10px] text-slate-400">${post.time} • <span class="text-red-600 font-bold">${post.category}</span></span>
                             </div>
                         </div>
-
                         ${isAdminLoggedIn ? `
-                        <button onclick="deletePost(${post.id})" class="text-slate-400 hover:text-red-600 p-1.5 rounded-lg hover:bg-red-50 transition" title="حذف المنشور">
-                            <i class="fa-regular fa-trash-can text-sm"></i>
-                        </button>
+                            <button onclick="deletePost(${post.id})" class="text-red-500 text-xs font-bold bg-red-50 px-2.5 py-1 rounded-lg">حذف الخبر</button>
                         ` : ''}
                     </div>
 
-                    <div class="px-4 pb-2">
-                        <h2 onclick="openReaderModal(${post.id})" class="text-sm sm:text-base font-black text-slate-900 mb-1.5 hover:text-red-600 transition cursor-pointer leading-snug">
-                            ${post.title}
-                        </h2>
-                        <p class="text-slate-600 text-xs leading-relaxed line-clamp-3">${post.content}</p>
+                    <div class="px-4 pb-3">
+                        <h2 class="text-base font-black text-slate-900 mb-1">${post.title}</h2>
+                        <p class="text-slate-600 text-xs leading-relaxed">${post.content}</p>
                     </div>
 
-                    ${post.image ? `
-                    <div onclick="openReaderModal(${post.id})" class="cursor-pointer max-h-80 overflow-hidden bg-slate-100">
-                        <img src="${post.image}" alt="${post.title}" class="w-full h-full object-cover hover:scale-102 transition duration-300">
-                    </div>
-                    ` : ''}
+                    ${post.image ? `<img src="${post.image}" class="w-full h-56 object-cover">` : ''}
 
-                    <div class="p-2.5 bg-slate-50 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-slate-600">
-                        <button onclick="togglePostLike(${post.id})" class="flex items-center gap-1.5 px-3 py-1 rounded-lg hover:bg-white transition ${post.userLiked ? 'text-red-600' : ''}">
-                            <i class="${post.userLiked ? 'fa-solid text-red-600' : 'fa-regular'} fa-heart"></i>
-                            <span>${post.likes}</span>
+                    <div class="p-3 bg-slate-50 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-slate-500">
+                        <button onclick="likePost(${post.id})" class="hover:text-red-600 flex items-center gap-1.5">
+                            <i class="fa-regular fa-heart"></i> <span>${post.likes} إعجاب</span>
                         </button>
-
-                        <button onclick="toggleCommentBox(${post.id})" class="flex items-center gap-1.5 px-3 py-1 rounded-lg hover:bg-white hover:text-blue-600 transition">
-                            <i class="fa-regular fa-message"></i>
-                            <span>${post.comments.length} تعليق</span>
+                        <button onclick="shareDirect('${post.title}')" class="hover:text-emerald-600 flex items-center gap-1.5">
+                            <i class="fa-solid fa-share-nodes"></i> مشاركة
                         </button>
-
-                        <div class="flex items-center gap-1">
-                            <button onclick="shareToSocial(${post.id}, 'whatsapp')" class="p-1.5 rounded-lg hover:bg-emerald-50 text-emerald-600 transition" title="واتساب"><i class="fa-brands fa-whatsapp text-sm"></i></button>
-                            <button onclick="shareToSocial(${post.id}, 'facebook')" class="p-1.5 rounded-lg hover:bg-blue-50 text-blue-600 transition" title="فيسبوك"><i class="fa-brands fa-facebook text-sm"></i></button>
-                            <button onclick="copyPostLink(${post.id})" class="p-1.5 rounded-lg hover:bg-slate-200 text-slate-600 transition" title="نسخ الرابط"><i class="fa-regular fa-copy text-sm"></i></button>
-                        </div>
                     </div>
+                </article>
+            `).join('');
+        }
 
-                    <div id="commentBox-${post.id}" class="hidden p-3.5 bg-slate-100 border-t border-slate-200">
-                        <div class="flex gap-2 mb-3">
-                            <input type="text" id="commentText-${post.id}" placeholder="اكتب رأيك حول هذا الخبر..." class="flex-1 bg-white text
+        function likePost(id) {
+            const p = database.find(x => x.id === id);
+            if(p) {
+                p.likes++;
+                localStorage.setItem(DB_KEY, JSON.stringify(database));
+                renderTimeline();
+            }
+        }
+
+        function deletePost(id) {
+            if(confirm("حذف هذا الخبر؟")) {
+                database = database.filter(x => x.id !== id);
+                localStorage.setItem(DB_KEY, JSON.stringify(database));
+                renderTimeline();
+                updateCounts();
+            }
+        }
+
+        function setCategoryFilter(cat, btn) {
+            currentFilter = cat;
+            document.querySelectorAll('.cat-nav-btn').forEach(b => b.className = "cat-nav-btn w-full flex items-center justify-between px-3 py-2 rounded-xl hover:bg-slate-100 text-slate-700 font-bold text-xs transition");
+            if(btn) btn.className = "cat-nav-btn w-full flex items-center justify-between px-3 py-2 rounded-xl bg-red-600 text-white font-bold text-xs transition";
+            document.getElementById('activeFilterBadge').innerText = cat;
+            renderTimeline();
+        }
+
+        function handleSearch(val) {
+            const q = val.toLowerCase().trim();
+            const filtered = database.filter(p => p.title.toLowerCase().includes(q) || p.content.toLowerCase().includes(q));
+            const feed = document.getElementById('postsTimeline');
+            feed.innerHTML = filtered.map(post => `
+                <article class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200">
+                    <h2 class="text-base font-black text-slate-900 mb-1">${post.title}</h2>
+                    <p class="text-slate-600 text-xs">${post.content}</p>
+                </article>
+            `).join('');
+        }
+
+        function updateCounts() {
+            document.getElementById('count-all').innerText = database.length;
+            ['عاجل', 'اقتصاد', 'رياضة', 'مقالات'].forEach(cat => {
+                const el = document.getElementById(`count-${cat}`);
+                if(el) el.innerText = database.filter(p => p.category === cat).length;
+            });
+        }
+
+        function renderTrending() {
+            const list = document.getElementById('trendingList');
+            list.innerHTML = database.slice(0, 3).map(p => `
+                <div class="border-b border-slate-100 pb-2">
+                    <span class="text-[10px] text-red-600 font-bold block"># ${p.category}</span>
+                    <h4 class="text-xs font-bold text-slate-800">${p.title}</h4>
+                </div>
+            `).join('');
+        }
+
+        function shareDirect(title) {
+            navigator.clipboard.writeText(window.location.href);
+            showToast("تم نسخ رابط الخبر!");
+        }
+    </script>
+</body>
+</html>
