@@ -139,7 +139,7 @@
             <!-- لوحة النشر للمدير -->
             <div id="publisherPanel" class="hidden bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
                 <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-3">
-                    <span class="text-xs font-black text-emerald-600">● مرحباً بك يا أبا داليدا (النشر السحابي نشط)</span>
+                    <span class="text-xs font-black text-emerald-600">● مرحباً بك يا أبا داليدا (النشر بالصور نشط)</span>
                     <button onclick="logoutAdmin()" class="text-xs text-red-500 font-bold hover:underline">قفل اللوحة</button>
                 </div>
 
@@ -154,14 +154,32 @@
                             <option value="رياضة">⚽ تصنيف: رياضة</option>
                             <option value="مقالات">✍️ تصنيف: مقالات</option>
                         </select>
-                        <input type="url" id="postImageUrl" placeholder="رابط صورة الغلاف (اختياري)..." class="bg-slate-50 border border-slate-200 text-xs rounded-xl px-3 py-2 focus:outline-none">
+                        <input type="url" id="postImageUrl" placeholder="أو ضع رابط صورة إنترنت هنا..." class="bg-slate-50 border border-slate-200 text-xs rounded-xl px-3 py-2 focus:outline-none">
+                    </div>
+
+                    <!-- قسم رفع صورة من الجهاز -->
+                    <div>
+                        <label for="postImageFileInput" class="w-full bg-slate-50 hover:bg-slate-100 border-2 border-dashed border-slate-300 rounded-xl p-3 flex flex-col items-center justify-center cursor-pointer transition">
+                            <i class="fa-solid fa-cloud-arrow-up text-red-500 text-lg mb-1"></i>
+                            <span id="fileUploadStatus" class="text-xs font-bold text-slate-600">اضغط لاختيار صورة من جهازك / موبايلك</span>
+                            <span class="text-[10px] text-slate-400">JPG, PNG, WebP (يتم ضغطها وتجهيزها تلقائياً)</span>
+                        </label>
+                        <input type="file" id="postImageFileInput" accept="image/*" onchange="handleImageSelection(event)" class="hidden">
+                    </div>
+
+                    <!-- معاينة الصورة المختارة -->
+                    <div id="imagePreviewContainer" class="hidden relative rounded-xl overflow-hidden max-h-48 border border-slate-200">
+                        <img id="imagePreview" src="" class="w-full h-full object-cover">
+                        <button type="button" onclick="clearSelectedImage()" class="absolute top-2 left-2 bg-black/60 text-white rounded-full w-7 h-7 flex items-center justify-center hover:bg-black transition">
+                            <i class="fa-solid fa-xmark text-xs"></i>
+                        </button>
                     </div>
 
                     <div class="flex items-center justify-between pt-2">
                         <label class="text-xs font-bold text-slate-600 flex items-center gap-1.5 cursor-pointer">
                             <input type="checkbox" id="tickerCheckbox" class="accent-red-600"> بث في الشريط العاجل
                         </label>
-                        <button type="submit" id="submitBtn" class="bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-2 rounded-xl text-xs shadow-md">
+                        <button type="submit" id="submitBtn" class="bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-2 rounded-xl text-xs shadow-md transition">
                             نشر سحابي للجميع
                         </button>
                     </div>
@@ -204,6 +222,7 @@
         let isAdminLoggedIn = false;
         let currentFilter = 'الكل';
         let liveNewsList = [];
+        let selectedBase64Image = '';
 
         document.addEventListener('DOMContentLoaded', () => {
             const dateEl = document.getElementById('currentLiveDate');
@@ -237,7 +256,7 @@
                 document.getElementById('headerAuthArea').innerHTML = `
                     <span class="text-xs bg-emerald-100 text-emerald-800 px-3 py-1.5 rounded-full font-bold">أبو داليدا (المدير العام) ✓</span>
                 `;
-                showToast("تم فتح لوحة النشر السحابي بنجاح!");
+                showToast("تم فتح لوحة النشر بنجاح!");
                 renderTimeline();
             } else {
                 alert("رمز المرور غير صحيح!");
@@ -255,6 +274,41 @@
                 </button>
             `;
             renderTimeline();
+        }
+
+        // تحويل وضغط الصورة المختارة مباشرة لضمان سرعة التحميل وسهولة التخزين
+        function handleImageSelection(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const MAX_WIDTH = 900;
+                    const scaleSize = MAX_WIDTH / img.width;
+                    canvas.width = (img.width > MAX_WIDTH) ? MAX_WIDTH : img.width;
+                    canvas.height = (img.width > MAX_WIDTH) ? (img.height * scaleSize) : img.height;
+
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    selectedBase64Image = canvas.toDataURL('image/jpeg', 0.75);
+
+                    document.getElementById('imagePreview').src = selectedBase64Image;
+                    document.getElementById('imagePreviewContainer').classList.remove('hidden');
+                    document.getElementById('fileUploadStatus').innerText = "تم تجهيز الصورة بنجاح ✓";
+                };
+                img.src = event.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function clearSelectedImage() {
+            selectedBase64Image = '';
+            document.getElementById('postImageFileInput').value = '';
+            document.getElementById('imagePreviewContainer').classList.add('hidden');
+            document.getElementById('fileUploadStatus').innerText = "اضغط لاختيار صورة من جهازك / موبايلك";
         }
 
         function listenToLiveNews() {
@@ -282,8 +336,11 @@
             const title = document.getElementById('postTitleInput').value.trim();
             const content = document.getElementById('postContentInput').value.trim();
             const category = document.getElementById('postCategorySelect').value;
-            let image = document.getElementById('postImageUrl').value.trim() || "https://images.unsplash.com/photo-1585829365295-ab7cd400c167?w=900&auto=format&fit=crop&q=80";
+            const urlImage = document.getElementById('postImageUrl').value.trim();
             const isTicker = document.getElementById('tickerCheckbox').checked;
+
+            // تحديد الصورة: إما المرفوعة من الجهاز، أو رابط الإنترنت، أو صورة افتراضية
+            let imageToSave = selectedBase64Image || urlImage || "https://images.unsplash.com/photo-1585829365295-ab7cd400c167?w=900&auto=format&fit=crop&q=80";
 
             try {
                 await db.collection("news").add({
@@ -291,7 +348,7 @@
                     content: content,
                     category: category,
                     author: "أبو داليدا",
-                    image: image,
+                    image: imageToSave,
                     isTicker: isTicker,
                     likes: 0,
                     createdAt: Date.now()
@@ -300,9 +357,10 @@
                 document.getElementById('postTitleInput').value = '';
                 document.getElementById('postContentInput').value = '';
                 document.getElementById('postImageUrl').value = '';
-                showToast("تم بث الخبر على السيرفر وظهر للجميع الآن! 🚀");
+                clearSelectedImage();
+                showToast("تم نشر الخبر بالصورة وظهر للجميع الآن! 🚀");
             } catch (err) {
-                alert("حدث خطأ في الاتصال، تأكد من إعدادات Firestore.");
+                alert("حدث خطأ أثناء حفظ الخبر والصورة، تأكد من اتصالك وقواعد Firebase.");
             } finally {
                 btn.disabled = false;
                 btn.innerText = "نشر سحابي للجميع";
@@ -329,7 +387,7 @@
                             </div>
                         </div>
                         ${isAdminLoggedIn ? `
-                            <button onclick="deletePost('${post.id}')" class="text-red-500 text-xs font-bold bg-red-50 px-2.5 py-1 rounded-lg">حذف</button>
+                            <button onclick="deletePost('${post.id}')" class="text-red-500 text-xs font-bold bg-red-50 px-2.5 py-1 rounded-lg hover:bg-red-100 transition">حذف</button>
                         ` : ''}
                     </div>
 
@@ -338,7 +396,7 @@
                         <p class="text-slate-600 text-xs leading-relaxed whitespace-pre-line">${post.content}</p>
                     </div>
 
-                    ${post.image ? `<img src="${post.image}" class="w-full h-56 object-cover bg-slate-100">` : ''}
+                    ${post.image ? `<img src="${post.image}" class="w-full h-64 object-cover bg-slate-100">` : ''}
 
                     <div class="p-3 bg-slate-50 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-slate-500">
                         <button onclick="likePost('${post.id}', ${post.likes || 0})" class="hover:text-red-600 flex items-center gap-1.5">
